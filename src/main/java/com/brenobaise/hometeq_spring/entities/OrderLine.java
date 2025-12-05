@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 public class OrderLine {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int orderLineId;
+    private Long orderLineId;
     private int quantityOrdered;
     private BigDecimal subTotal;
 

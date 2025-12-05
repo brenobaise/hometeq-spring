@@ -1,9 +1,11 @@
 package com.brenobaise.hometeq_spring.services;
 
 import com.brenobaise.hometeq_spring.dtos.product.ProductDTO;
+import com.brenobaise.hometeq_spring.dtos.product.ProductInsertDTO;
 import com.brenobaise.hometeq_spring.entities.Product;
 import com.brenobaise.hometeq_spring.mappers.ProductMapper;
 import com.brenobaise.hometeq_spring.repositories.ProductRepository;
+import com.brenobaise.hometeq_spring.services.exceptions.ProductAlreadyExistsException;
 import com.brenobaise.hometeq_spring.services.exceptions.ResourceNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -39,6 +41,22 @@ public class ProductService {
         Page<Product> result = productRepository.findAll(pageable);
 
         return result.map(productMapper::toDTO);
+    }
+
+    @Transactional()
+    public Product newProduct(ProductInsertDTO dto){
+        if(productExistsByName(dto.getProdName())){
+            throw new ProductAlreadyExistsException(dto.getProdName());
+        }
+
+        Product product = productMapper.toEntity(dto);
+
+        return productRepository.save(product);
+    }
+
+
+    private boolean productExistsByName(String name){
+        return productRepository.findByProdName(name).isPresent();
     }
 
 }

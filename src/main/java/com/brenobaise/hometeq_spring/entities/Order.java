@@ -16,7 +16,7 @@ import java.util.List;
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int orderNo;
+    private Long orderNo;
     private LocalDateTime orderDate;
     private BigDecimal orderTotal;
     private String orderStatus;

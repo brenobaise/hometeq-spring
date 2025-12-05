@@ -1,6 +1,7 @@
 package com.brenobaise.hometeq_spring.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -16,15 +17,21 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int prodId;
+    private Long prodId;
+
     @Column(unique = true)
     private String prodName;
+    @Column(nullable = true)
     private String prodPicNameSmall;
+    @Column(nullable = true)
     private String prodPicNameLarge;
+    @Column(nullable = true)
     private String prodDescriptionShort;
+    @Column(nullable = true)
     private String prodDescriptionLong;
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal prodPrice;
+    @Column(nullable = true)
     private int prodQuantity;
 
     @OneToMany(mappedBy = "product")
