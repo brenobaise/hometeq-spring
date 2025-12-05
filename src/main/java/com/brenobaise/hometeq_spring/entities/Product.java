@@ -2,6 +2,7 @@ package com.brenobaise.hometeq_spring.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.List;
 @Entity
 @Data
 @Table(name = "tb_products")
+@NoArgsConstructor
 public class Product {
 
     @Id
