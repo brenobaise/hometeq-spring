@@ -2,6 +2,7 @@ package com.brenobaise.hometeq_spring.services;
 
 import com.brenobaise.hometeq_spring.dtos.product.ProductDTO;
 import com.brenobaise.hometeq_spring.dtos.product.ProductInsertDTO;
+import com.brenobaise.hometeq_spring.dtos.product.ProductUpdateDTO;
 import com.brenobaise.hometeq_spring.entities.Product;
 import com.brenobaise.hometeq_spring.mappers.ProductMapper;
 import com.brenobaise.hometeq_spring.repositories.ProductRepository;
@@ -44,19 +45,42 @@ public class ProductService {
     }
 
     @Transactional()
-    public Product newProduct(ProductInsertDTO dto){
+    public ProductDTO newProduct(ProductInsertDTO dto){
         if(productExistsByName(dto.getProdName())){
             throw new ProductAlreadyExistsException(dto.getProdName());
         }
 
         Product product = productMapper.toEntity(dto);
-
-        return productRepository.save(product);
+        productRepository.save(product);
+        return productMapper.toDTO(product);
     }
 
+    @Transactional()
+    public ProductDTO updateProduct(Long id, ProductUpdateDTO dto){
+        Product foundProduct = existsById(id);
 
+        productMapper.updateEntityFromDto(dto, foundProduct);
+        productRepository.save(foundProduct);
+        return productMapper.toDTO(foundProduct);
+    }
+
+    /**
+     * Checks the database to see if a product already exists with a given name.\n
+     * @param name query param to search for inside the database.
+     * @return {@code boolean}
+     */
     private boolean productExistsByName(String name){
         return productRepository.findByProdName(name).isPresent();
     }
 
+    /**
+     * Checks the database if a product exists by id.
+     * This is an internal method for retrieving a Product entity.
+     * @param id the id to look for in the database
+     * @return a {@code Product} or {@code Optional#empty()}
+     */
+    private Product existsById(Long id){
+        return productRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(id));
+    }
 }

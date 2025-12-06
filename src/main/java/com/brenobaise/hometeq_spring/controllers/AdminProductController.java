@@ -2,15 +2,13 @@ package com.brenobaise.hometeq_spring.controllers;
 
 import com.brenobaise.hometeq_spring.dtos.product.ProductDTO;
 import com.brenobaise.hometeq_spring.dtos.product.ProductInsertDTO;
+import com.brenobaise.hometeq_spring.dtos.product.ProductUpdateDTO;
 import com.brenobaise.hometeq_spring.entities.Product;
 import com.brenobaise.hometeq_spring.mappers.ProductMapper;
 import com.brenobaise.hometeq_spring.services.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
@@ -28,13 +26,22 @@ public class AdminProductController {
 
     @PostMapping
     public ResponseEntity<ProductDTO> create(@Valid @RequestBody ProductInsertDTO dto){
-        Product product = productService.newProduct(dto);
+        ProductDTO product = productService.newProduct(dto);
 
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(product.getProdId())
                 .toUri();
-        return ResponseEntity.created(uri).body(productMapper.toDTO(product));
+        return ResponseEntity.created(uri).body(product);
     }
-    public void update(){}
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ProductDTO> update(@PathVariable Long id, @Valid @RequestBody ProductUpdateDTO dto){
+        ProductDTO updatedProduct = productService.updateProduct(id, dto);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                .buildAndExpand(updatedProduct.getProdId())
+                .toUri();
+
+        return ResponseEntity.created(uri).body(updatedProduct);
+    }
     public void delete(){}
 }
