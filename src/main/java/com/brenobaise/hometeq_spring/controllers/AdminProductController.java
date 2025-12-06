@@ -6,7 +6,10 @@ import com.brenobaise.hometeq_spring.dtos.product.ProductUpdateDTO;
 import com.brenobaise.hometeq_spring.entities.Product;
 import com.brenobaise.hometeq_spring.mappers.ProductMapper;
 import com.brenobaise.hometeq_spring.services.ProductService;
+import com.brenobaise.hometeq_spring.services.exceptions.DatabaseException;
+import com.brenobaise.hometeq_spring.services.exceptions.ResourceNotFoundException;
 import jakarta.validation.Valid;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -43,5 +46,19 @@ public class AdminProductController {
 
         return ResponseEntity.created(uri).body(updatedProduct);
     }
-    public void delete(){}
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id){
+        if (productService.findById(id) == null) {
+            throw new ResourceNotFoundException(id);
+        }
+        try {
+            productService.deleteProduct(id);
+        }
+        catch (DataIntegrityViolationException e) {
+            throw new DatabaseException("Referential Integrity restraint, trying to delete used entity.");
+        }
+
+        return ResponseEntity.noContent().build();
+    }
 }

@@ -64,6 +64,11 @@ public class ProductService {
         return productMapper.toDTO(foundProduct);
     }
 
+    @Transactional()
+    public void deleteProduct(Long id){
+        productRepository.deleteById(id);
+    }
+
     /**
      * Checks the database to see if a product already exists with a given name.\n
      * @param name query param to search for inside the database.
