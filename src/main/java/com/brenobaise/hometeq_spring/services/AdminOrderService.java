@@ -10,6 +10,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+
 @Service
 public class AdminOrderService {
 
@@ -33,5 +37,14 @@ public class AdminOrderService {
                 .orElseThrow(() -> new ResourceNotFoundException(id));
 
         return orderMapper.toAdminDTO(order);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<OrderAdminDTO> searchOrderByDate(LocalDate date, Pageable pageable){
+        LocalDateTime start = date.atStartOfDay();
+        LocalDateTime end = date.atTime(LocalTime.MAX);
+
+        Page<Order> orders = orderRepository.findByOrderDateRange(start, end, pageable);
+        return orders.map(orderMapper::toAdminDTO);
     }
 }

@@ -6,11 +6,11 @@ import com.brenobaise.hometeq_spring.services.AdminOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/admin/orders")
@@ -26,4 +26,14 @@ public class AdminOrderController {
     public ResponseEntity<OrderAdminDTO> getOrderById(@PathVariable Long id){
         return ResponseEntity.ok().body(adminOrderService.getOrderById(id));
     }
+
+    @GetMapping("/search-by-date")
+    public ResponseEntity<Page<OrderAdminDTO>> searchOrdersByDate(
+            @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date, Pageable pageable) {
+
+        Page<OrderAdminDTO> result = adminOrderService.searchOrderByDate(date, pageable);
+
+        return ResponseEntity.ok(result);
+    }
+
 }
