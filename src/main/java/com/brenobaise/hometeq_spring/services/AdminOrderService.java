@@ -1,8 +1,10 @@
 package com.brenobaise.hometeq_spring.services;
 
 import com.brenobaise.hometeq_spring.dtos.order.OrderAdminDTO;
+import com.brenobaise.hometeq_spring.entities.Order;
 import com.brenobaise.hometeq_spring.mappers.OrderMapper;
 import com.brenobaise.hometeq_spring.repositories.OrderRepository;
+import com.brenobaise.hometeq_spring.services.exceptions.ResourceNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -23,5 +25,13 @@ public class AdminOrderService {
     public Page<OrderAdminDTO> getAllOrders(Pageable pageable){
         return orderRepository.findAllOrders(pageable)
                 .map(orderMapper::toAdminDTO);
+    }
+
+    @Transactional(readOnly = true)
+    public OrderAdminDTO getOrderById(Long id){
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(id));
+
+        return orderMapper.toAdminDTO(order);
     }
 }

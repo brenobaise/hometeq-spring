@@ -1,6 +1,5 @@
 package com.brenobaise.hometeq_spring.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
