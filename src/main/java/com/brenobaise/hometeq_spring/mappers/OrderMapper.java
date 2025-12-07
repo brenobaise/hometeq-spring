@@ -1,5 +1,6 @@
 package com.brenobaise.hometeq_spring.mappers;
 
+import com.brenobaise.hometeq_spring.dtos.order.OrderAdminDTO;
 import com.brenobaise.hometeq_spring.dtos.order.OrderDTO;
 import com.brenobaise.hometeq_spring.dtos.order.OrderInsertDTO;
 import com.brenobaise.hometeq_spring.dtos.order.OrderLineDTO;
@@ -20,4 +21,8 @@ public interface OrderMapper {
 
     @Mapping(target = "items", source = "orderLineList")
     OrderDTO toDTO(Order order);
+
+    @Mapping(target = "userEmail", source = "user.userEmail")
+    @Mapping(target = "items", source = "orderLineList")
+    OrderAdminDTO toAdminDTO(Order order);
 }

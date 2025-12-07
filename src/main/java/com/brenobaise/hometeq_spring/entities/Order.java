@@ -3,6 +3,7 @@ package com.brenobaise.hometeq_spring.entities;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -13,6 +14,7 @@ import java.util.List;
 @Entity
 @Data
 @Table(name = "tb_orders")
+@NoArgsConstructor
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
