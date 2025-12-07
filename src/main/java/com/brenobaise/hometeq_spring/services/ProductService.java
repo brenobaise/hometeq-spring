@@ -13,6 +13,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 public class ProductService {
 
@@ -84,7 +86,7 @@ public class ProductService {
      * @param id the id to look for in the database
      * @return a {@code Product} or {@code Optional#empty()}
      */
-    private Product existsById(Long id){
+    public Product existsById(Long id){
         return productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(id));
     }

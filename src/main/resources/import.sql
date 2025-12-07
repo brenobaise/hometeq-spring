@@ -19,17 +19,17 @@ INSERT INTO tb_products (prod_name, prod_pic_name_small, prod_pic_name_large, pr
 ------------------------------------------------------------
 -- ORDERS
 ------------------------------------------------------------
-INSERT INTO tb_orders (order_no, order_date, order_total, order_status, shipping_date, user_id) VALUES (1, '2025-01-10T14:32:00', 134.48, 'Processing', '2025-01-15', 1);
+INSERT INTO tb_orders ( order_date, order_total, order_status, shipping_date, user_id) VALUES ( '2025-01-10T14:32:00', 134.48, 'Processing', '2025-01-15', 1);
 
-INSERT INTO tb_orders (order_no, order_date, order_total, order_status, shipping_date, user_id) VALUES (2, '2025-01-12T10:05:00', 89.99, 'Shipped', '2025-01-17', 2);
+INSERT INTO tb_orders ( order_date, order_total, order_status, shipping_date, user_id) VALUES ( '2025-01-12T10:05:00', 89.99, 'Shipped', '2025-01-17', 2);
 
 ------------------------------------------------------------
 -- ORDER LINES
 ------------------------------------------------------------
-INSERT INTO tb_order_line (order_line_id, quantity_ordered, sub_total, order_no, prod_id) VALUES (1, 1, 89.99, 1, 2);
+INSERT INTO tb_order_line (quantity_ordered, sub_total, order_no, prod_id) VALUES ( 1, 89.99, 1, 2);
 
-INSERT INTO tb_order_line (order_line_id, quantity_ordered, sub_total, order_no, prod_id) VALUES (2, 2, 49.00, 1, 3);
+INSERT INTO tb_order_line ( quantity_ordered, sub_total, order_no, prod_id) VALUES ( 2, 49.00, 1, 3);
 
-INSERT INTO tb_order_line (order_line_id, quantity_ordered, sub_total, order_no, prod_id) VALUES (3, 1, 19.99, 1, 1);
+INSERT INTO tb_order_line ( quantity_ordered, sub_total, order_no, prod_id) VALUES ( 1, 19.99, 1, 1);
 
-INSERT INTO tb_order_line (order_line_id, quantity_ordered, sub_total, order_no, prod_id) VALUES (4, 1, 59.95, 2, 4);
+INSERT INTO tb_order_line (quantity_ordered, sub_total, order_no, prod_id) VALUES ( 1, 59.95, 2, 4);

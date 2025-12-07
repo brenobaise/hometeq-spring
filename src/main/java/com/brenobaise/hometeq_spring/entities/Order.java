@@ -26,14 +26,24 @@ public class Order {
     @JoinColumn(name = "userId")
     private User user;
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     List<OrderLine> orderLineList = new ArrayList<>();
 
 
-    public void addProduct(Product product, int quantity) {
+    public Order(User user, LocalDateTime orderDate, String orderStatus, LocalDate shippingDate) {
+        this.user = user;
+        this.orderDate = orderDate;
+        this.orderStatus = orderStatus;
+        this.shippingDate = shippingDate;
+    }
+
+    public void addProduct(Product product, Long quantity) {
         OrderLine line = new OrderLine(
                 this, product,quantity, product.getProdPrice().multiply(BigDecimal.valueOf(quantity))
         );
+
+        line.setOrder(this);
+        line.setProduct(product);
 
         this.orderLineList.add(line);
     }

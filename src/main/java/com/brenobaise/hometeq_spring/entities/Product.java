@@ -32,12 +32,12 @@ public class Product {
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal prodPrice;
     @Column(nullable = true)
-    private int prodQuantity;
+    private Long prodQuantity;
 
     @OneToMany(mappedBy = "product")
     List<OrderLine> orderLineList = new ArrayList<>();
 
-    public Product(String prodName, String prodPicNameSmall, String prodPicNameLarge, String prodDescriptionShort, String prodDescriptionLong, BigDecimal prodPrice, int prodQuantity) {
+    public Product(String prodName, String prodPicNameSmall, String prodPicNameLarge, String prodDescriptionShort, String prodDescriptionLong, BigDecimal prodPrice, Long prodQuantity) {
         this.prodName = prodName;
         this.prodPicNameSmall = prodPicNameSmall;
         this.prodPicNameLarge = prodPicNameLarge;

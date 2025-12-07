@@ -14,7 +14,7 @@ public class OrderLine {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long orderLineId;
-    private int quantityOrdered;
+    private Long quantityOrdered;
     private BigDecimal subTotal;
 
     @ManyToOne(optional = false)
@@ -25,7 +25,7 @@ public class OrderLine {
     @JoinColumn(name = "prodId")
     private Product product;
 
-    public OrderLine(Order order, Product product, int quantityOrdered, BigDecimal subTotal) {
+    public OrderLine(Order order, Product product, Long quantityOrdered, BigDecimal subTotal) {
         this.order = order;
         this.product = product;
         this.quantityOrdered = quantityOrdered;
