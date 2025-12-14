@@ -9,6 +9,7 @@ import com.brenobaise.hometeq_spring.entities.User;
 import com.brenobaise.hometeq_spring.mappers.OrderMapper;
 import com.brenobaise.hometeq_spring.repositories.OrderRepository;
 import com.brenobaise.hometeq_spring.repositories.ProductRepository;
+import com.brenobaise.hometeq_spring.services.exceptions.OrderDoesNotExist;
 import com.brenobaise.hometeq_spring.services.exceptions.ResourceNotFoundException;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -140,5 +141,10 @@ public class OrderService {
      */
     private BigDecimal calculateLineTotal(BigDecimal unitPrice, Long prodQuantity){
         return  unitPrice.multiply(BigDecimal.valueOf(prodQuantity));
+    }
+
+    public Order findById(Long orderNo){
+        return orderRepository.findById(orderNo)
+                .orElseThrow(() -> new OrderDoesNotExist(orderNo));
     }
 }

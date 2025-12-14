@@ -2,6 +2,7 @@ package com.brenobaise.hometeq_spring.controllers;
 
 import com.brenobaise.hometeq_spring.dtos.order.OrderAdminDTO;
 import com.brenobaise.hometeq_spring.dtos.order.OrderStatusDTO;
+import com.brenobaise.hometeq_spring.dtos.order.UpdateOrderStatusRequest;
 import com.brenobaise.hometeq_spring.services.AdminOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -42,5 +43,13 @@ public class AdminOrderController {
             @PathVariable String status, Pageable pageable){
         return ResponseEntity.ok(adminOrderService.getOrdersByStatus(status.toLowerCase(), pageable));
     }
+
+    @PatchMapping("{orderNo}/status")
+    public ResponseEntity<Void> updateOrderStatus(@PathVariable Long orderNo, @RequestBody UpdateOrderStatusRequest request){
+        adminOrderService.updateOrderStatus(orderNo, request.getStatus());
+        return  ResponseEntity.noContent().build();
+
+    }
+
 
 }

@@ -49,5 +49,8 @@ public class Order {
         this.orderLineList.add(line);
     }
 
+    public void updateStatus(String newStatus) {
+        setOrderStatus(newStatus);
+    }
 }
 
