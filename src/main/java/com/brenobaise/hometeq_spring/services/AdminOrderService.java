@@ -1,6 +1,7 @@
 package com.brenobaise.hometeq_spring.services;
 
 import com.brenobaise.hometeq_spring.dtos.order.OrderAdminDTO;
+import com.brenobaise.hometeq_spring.dtos.order.OrderStatusDTO;
 import com.brenobaise.hometeq_spring.entities.Order;
 import com.brenobaise.hometeq_spring.mappers.OrderMapper;
 import com.brenobaise.hometeq_spring.repositories.OrderRepository;
@@ -46,5 +47,10 @@ public class AdminOrderService {
 
         Page<Order> orders = orderRepository.findByOrderDateRange(start, end, pageable);
         return orders.map(orderMapper::toAdminDTO);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<OrderStatusDTO> getOrdersByStatus(String status, Pageable pageable ){
+        return orderRepository.findByOrderStatusIgnoreCase(status,pageable);
     }
 }

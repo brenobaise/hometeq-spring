@@ -1,5 +1,6 @@
 package com.brenobaise.hometeq_spring.repositories;
 
+import com.brenobaise.hometeq_spring.dtos.order.OrderStatusDTO;
 import com.brenobaise.hometeq_spring.entities.Order;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -51,6 +52,18 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             ORDER BY o.orderDate DESC
             """)
     Page<Order> findByOrderDateRange(@Param("start") LocalDateTime start, @PathVariable("end") LocalDateTime end,
-                                     Pageable pageable
+                                     Pageable pageable);
+
+    @Query("""
+            SELECT new com.brenobaise.hometeq_spring.dtos.order.OrderStatusDTO(
+                    o.orderNo,
+                    o.orderStatus
+                )
+            FROM Order o
+            Where LOWER(o.orderStatus) = LOWER(:status)
+            """)
+    Page<OrderStatusDTO> findByOrderStatusIgnoreCase(
+            @Param( "status") String status, Pageable pageable
     );
+
 }
