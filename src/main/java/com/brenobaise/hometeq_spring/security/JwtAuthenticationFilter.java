@@ -6,7 +6,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -33,11 +32,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
-
-                // sets the id of the authenticated user inside the SecurityContext
-                if(userDetails instanceof AppUserDetails){
-                    request.setAttribute("userId", ((AppUserDetails) userDetails).getUserId());
-                }
             }
         } catch (Exception e) {
             // doesnt  throw any exceptions because service will do it if anything is invalid.

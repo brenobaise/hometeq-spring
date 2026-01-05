@@ -27,7 +27,7 @@ public class AuthController {
         String tokenValue = authenticationService.generateToken(userDetails);
         AuthResponse authResponse = AuthResponse.builder()
                 .token(tokenValue)
-                .expiresIn(86400)
+                .expiresIn(authenticationService.getJwtExpiryMs()/1000)
                 .build();
         return ResponseEntity.ok(authResponse);
     }

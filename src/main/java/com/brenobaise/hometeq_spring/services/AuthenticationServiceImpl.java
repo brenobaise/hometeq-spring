@@ -5,6 +5,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,8 +26,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final UserDetailsService userDetailsService;
 
     @Value("${jwt.secret}")
-    private final String secretKey;
-    private final Long jwtExpiryMs = 86400000L;
+    private  String secretKey;
+    @Getter
+    public final Long jwtExpiryMs = 60000L;
 
     @Override
     public UserDetails authenticate(String email, String password) {
