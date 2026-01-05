@@ -18,12 +18,12 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductDTO> findById(@PathVariable Long id){
+    public ResponseEntity<ProductDTO> searchProductById(@PathVariable Long id){
         return ResponseEntity.ok(productService.findById(id));
     }
 
     @GetMapping("/search")
-    public ResponseEntity<Page<ProductDTO>> searchByName(@RequestParam String name, Pageable pageable){
+    public ResponseEntity<Page<ProductDTO>> searchProductByName(@RequestParam String name, Pageable pageable){
         return ResponseEntity.ok(productService.findAllByName(name, pageable));
     }
     @GetMapping

@@ -49,8 +49,8 @@ public class OrderService {
 
         Order newOrder = createOrder(user);
 
-        log.info(String.valueOf(newOrder.getOrderDate()));
 
+        // fetches products from the database based on the items in the cart given by the DTO
         Map<Long, Product> mappedProducts = loadProducts(order);
 
         BigDecimal orderTotal  = addProductsToOrder(order.getItemsInCart(), mappedProducts, newOrder);
