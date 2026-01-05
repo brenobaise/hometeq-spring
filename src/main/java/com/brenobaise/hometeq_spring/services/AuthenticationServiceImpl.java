@@ -1,6 +1,7 @@
 package com.brenobaise.hometeq_spring.services;
 
 import com.brenobaise.hometeq_spring.security.AuthenticationService;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -58,7 +59,17 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public String validateToken() {
-        return "";
+    public UserDetails validateToken(String token) {
+        String username = extractUsernameFromToken(token);
+        return userDetailsService.loadUserByUsername(username);
+    }
+
+    private String extractUsernameFromToken(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+        return  claims.getSubject();
     }
 }
