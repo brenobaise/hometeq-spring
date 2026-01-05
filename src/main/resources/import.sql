@@ -1,9 +1,9 @@
 ------------------------------------------------------------
 -- USERS
 ------------------------------------------------------------
-INSERT INTO tb_user (user_id, user_type, user_first_name, user_second_name, user_address, user_post_code, user_phone_number, user_email, user_password) VALUES (1, 0, 'John', 'Doe', '123 Maple Street', 'AB12 3CD', 1234567890, 'john@example.com', 'password123');
+INSERT INTO tb_user (user_id, user_type, user_first_name, user_second_name, user_address, user_post_code, user_phone_number, user_email, user_password) VALUES (1, 0, 'John', 'Doe', '123 Maple Street', 'AB12 3CD', 1234567890, 'john@example.com', '{bcrypt}$2a$10$lnj7b.FHbKb04uwGEgX5k.zCIu9eqDp8g6SspiWtWW/m5ox8OHw3i');
 
-INSERT INTO tb_user (user_id, user_type, user_first_name, user_second_name, user_address, user_post_code, user_phone_number, user_email, user_password) VALUES (2, 1, 'Alice', 'Smith', '45 Queen Road', 'XY98 7ZT', 987654321, 'alice@example.com', 'secretPass');
+INSERT INTO tb_user (user_id, user_type, user_first_name, user_second_name, user_address, user_post_code, user_phone_number, user_email, user_password) VALUES (2, 1, 'Alice', 'Smith', '45 Queen Road', 'XY98 7ZT', 987654321, 'alice@example.com', '{bcrypt}$2a$10$lnj7b.FHbKb04uwGEgX5k.zCIu9eqDp8g6SspiWtWW/m5ox8OHw3i');
 
 ------------------------------------------------------------
 -- PRODUCTS

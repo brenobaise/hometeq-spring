@@ -1,0 +1,9 @@
+package com.brenobaise.hometeq_spring.security;
+
+import org.springframework.security.core.userdetails.UserDetails;
+
+public interface AuthenticationService {
+    UserDetails authenticate(String email, String password);
+    String generateToken(UserDetails userDetails);
+    String validateToken();
+}
