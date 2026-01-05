@@ -4,11 +4,13 @@ import com.brenobaise.hometeq_spring.dtos.order.OrderDTO;
 import com.brenobaise.hometeq_spring.dtos.order.OrderInsertDTO;
 import com.brenobaise.hometeq_spring.entities.Order;
 import com.brenobaise.hometeq_spring.entities.User;
+import com.brenobaise.hometeq_spring.security.AppUserDetails;
 import com.brenobaise.hometeq_spring.services.OrderService;
 import com.brenobaise.hometeq_spring.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -23,12 +25,10 @@ public class OrderEmissionController {
     private UserService userService;
 
     @PostMapping()
-    public ResponseEntity<OrderDTO> fireOrder( @Valid @RequestBody OrderInsertDTO order){
-        // validate if user exists
-        User user = userService.findByEmail(order.getUserEmail());
+    public ResponseEntity<OrderDTO> fireOrder(@AuthenticationPrincipal AppUserDetails user,
+                                              @Valid @RequestBody OrderInsertDTO order){
 
-
-        OrderDTO newOrder = orderService.fire(user, order);
+        OrderDTO newOrder = orderService.fire(user.getUsername(), order);
 
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(newOrder.getOrderNo())

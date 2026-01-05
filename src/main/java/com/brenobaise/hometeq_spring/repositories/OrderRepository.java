@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -36,6 +35,15 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
            WHERE o.orderNo = :id
         """)
     Optional<Order> findOrderWithLines(Long id);
+    @Query("""
+           SELECT DISTINCT o FROM Order o
+           LEFT JOIN FETCH o.orderLineList l
+           LEFT JOIN FETCH l.product
+           WHERE o.user.userId = :userId
+           ORDER BY o.orderDate DESC
+        """)
+    List<Order> findOrdersWithLinesByUserId(@Param("userId") Long userId);
+
 
     @Query("""
            SELECT DISTINCT o FROM Order o
@@ -51,7 +59,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             WHERE o.orderDate BETWEEN :start AND :end
             ORDER BY o.orderDate DESC
             """)
-    Page<Order> findByOrderDateRange(@Param("start") LocalDateTime start, @PathVariable("end") LocalDateTime end,
+    Page<Order> findByOrderDateRange(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end,
                                      Pageable pageable);
 
     @Query("""

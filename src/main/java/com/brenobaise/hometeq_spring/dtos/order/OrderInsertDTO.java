@@ -10,9 +10,6 @@ import java.util.List;
 
 @Data
 public class OrderInsertDTO {
-    @NotBlank(message = "user email cannot be blank")
-    @Email(message = "email must be a valid email")
-    private String userEmail;
     @Valid
     List<ProductOrderItem> itemsInCart;
 }

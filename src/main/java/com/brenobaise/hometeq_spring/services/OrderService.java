@@ -12,6 +12,7 @@ import com.brenobaise.hometeq_spring.repositories.ProductRepository;
 import com.brenobaise.hometeq_spring.services.exceptions.OrderDoesNotExist;
 import com.brenobaise.hometeq_spring.services.exceptions.ResourceNotFoundException;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,31 +22,29 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class OrderService {
 
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
     private final OrderMapper orderMapper;
+    private final UserService userService;
 
-    public OrderService(OrderRepository orderRepository, ProductRepository productRepository, OrderMapper orderMapper) {
-        this.orderRepository = orderRepository;
-        this.productRepository = productRepository;
-        this.orderMapper = orderMapper;
-    }
 
     /**
      * Fire is the process of creating a new order, assigning the user to it, and adding all desired products to that order.
-     * @param user The user assigned to this new order
+     * @param username The user email assigned to this new order
      * @param order The dto containing all the product ids
      * @return {@code Order}
      */
     @Transactional()
-    public OrderDTO fire(User user, @Valid OrderInsertDTO order) {
-
+    public OrderDTO fire(String username, @Valid OrderInsertDTO order) {
+        User user = userService.findByEmail(username);
 
         Order newOrder = createOrder(user);
 
@@ -146,5 +145,9 @@ public class OrderService {
     public Order findById(Long orderNo){
         return orderRepository.findById(orderNo)
                 .orElseThrow(() -> new OrderDoesNotExist(orderNo));
+    }
+
+    public List<Order> getAllOrders(Long userId){
+        return orderRepository.findOrdersWithLinesByUserId(userId);
     }
 }
