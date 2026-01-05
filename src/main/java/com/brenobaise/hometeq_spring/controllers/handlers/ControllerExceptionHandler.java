@@ -5,6 +5,7 @@ import com.brenobaise.hometeq_spring.dtos.errors.ValidationError;
 import com.brenobaise.hometeq_spring.services.exceptions.DatabaseException;
 import com.brenobaise.hometeq_spring.services.exceptions.ProductAlreadyExistsException;
 import com.brenobaise.hometeq_spring.services.exceptions.ResourceNotFoundException;
+import com.brenobaise.hometeq_spring.services.exceptions.auth.EmailAlreadyInUseException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -130,5 +131,17 @@ public class ControllerExceptionHandler {
                 .build();
 
         return ResponseEntity.status(status).body(err);
+    }
+
+    @ExceptionHandler(EmailAlreadyInUseException.class)
+    public ResponseEntity<CustomError> handlerEmailAlreadyInUseException (EmailAlreadyInUseException ex, HttpServletRequest request){
+        CustomError err = CustomError.builder()
+                .timestamp(Instant.now())
+                .status(HttpStatus.CONFLICT.value())
+                .error(ex.getMessage())
+                .message("Email already in use.")
+                .path(request.getRequestURI())
+                .build();
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(err);
     }
 }

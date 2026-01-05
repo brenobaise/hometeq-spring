@@ -1,5 +1,9 @@
 package com.brenobaise.hometeq_spring.services;
 
+import com.brenobaise.hometeq_spring.dtos.auth.AuthResponse;
+import com.brenobaise.hometeq_spring.dtos.auth.SignUpRequest;
+import com.brenobaise.hometeq_spring.entities.User;
+import com.brenobaise.hometeq_spring.security.AppUserDetails;
 import com.brenobaise.hometeq_spring.security.AuthenticationService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -24,6 +28,7 @@ import java.util.Map;
 public class AuthenticationServiceImpl implements AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final UserDetailsService userDetailsService;
+    private final UserService userService;
 
     @Value("${jwt.secret}")
     private  String secretKey;
@@ -64,6 +69,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public UserDetails validateToken(String token) {
         String username = extractUsernameFromToken(token);
         return userDetailsService.loadUserByUsername(username);
+    }
+
+    public AuthResponse registerAndAuthenticateUser(SignUpRequest request){
+        User user = userService.registerUser(request);
+        UserDetails userDetails = new AppUserDetails(user);
+        String token = generateToken(userDetails);
+        return new AuthResponse(token,getJwtExpiryMs() /1000);
+
     }
 
     private String extractUsernameFromToken(String token) {

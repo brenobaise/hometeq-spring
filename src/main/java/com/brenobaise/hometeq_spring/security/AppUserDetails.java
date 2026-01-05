@@ -2,6 +2,7 @@ package com.brenobaise.hometeq_spring.security;
 
 import com.brenobaise.hometeq_spring.entities.User;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
