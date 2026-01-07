@@ -1,9 +1,7 @@
 package com.brenobaise.hometeq_spring.services;
 
 import com.brenobaise.hometeq_spring.dtos.auth.AuthResponse;
-import com.brenobaise.hometeq_spring.dtos.auth.SignUpRequest;
-import com.brenobaise.hometeq_spring.entities.Role;
-import com.brenobaise.hometeq_spring.entities.RoleName;
+import com.brenobaise.hometeq_spring.dtos.auth.UserSignUpRequest;
 import com.brenobaise.hometeq_spring.entities.User;
 import com.brenobaise.hometeq_spring.security.AppUserDetails;
 import com.brenobaise.hometeq_spring.security.AuthenticationService;
@@ -17,7 +15,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
@@ -85,7 +82,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         return new AppUserDetails(user);
     }
-    public AuthResponse registerAndAuthenticateUser(SignUpRequest request){
+    public AuthResponse registerAndAuthenticateUser(UserSignUpRequest request){
         User user = userService.registerUser(request);
 
         String token = generateToken(new AppUserDetails(user));

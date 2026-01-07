@@ -1,10 +1,11 @@
-package com.brenobaise.hometeq_spring.services;
+package com.brenobaise.hometeq_spring.services.admin;
 
 import com.brenobaise.hometeq_spring.dtos.order.OrderAdminDTO;
 import com.brenobaise.hometeq_spring.dtos.order.OrderStatusDTO;
 import com.brenobaise.hometeq_spring.entities.Order;
 import com.brenobaise.hometeq_spring.mappers.OrderMapper;
 import com.brenobaise.hometeq_spring.repositories.OrderRepository;
+import com.brenobaise.hometeq_spring.services.OrderService;
 import com.brenobaise.hometeq_spring.services.exceptions.OrderDoesNotExist;
 import com.brenobaise.hometeq_spring.services.exceptions.ResourceNotFoundException;
 import org.springframework.data.domain.Page;

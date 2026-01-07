@@ -1,15 +1,14 @@
 package com.brenobaise.hometeq_spring.services;
 
-import com.brenobaise.hometeq_spring.dtos.auth.SignUpRequest;
+import com.brenobaise.hometeq_spring.dtos.auth.AdminSignUpRequest;
+import com.brenobaise.hometeq_spring.dtos.auth.UserSignUpRequest;
 import com.brenobaise.hometeq_spring.entities.Role;
 import com.brenobaise.hometeq_spring.entities.RoleName;
 import com.brenobaise.hometeq_spring.entities.User;
 import com.brenobaise.hometeq_spring.repositories.UserRepository;
-import com.brenobaise.hometeq_spring.security.AppUserDetails;
 import com.brenobaise.hometeq_spring.services.exceptions.ResourceNotFoundException;
 import com.brenobaise.hometeq_spring.services.exceptions.auth.EmailAlreadyInUseException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,18 +34,37 @@ public class UserService {
     }
 
     @Transactional()
-    public User registerUser(SignUpRequest request){
-        String email = request.getUserEmail();
-
-        if(userRepository.existsByUserEmail(email)){
-            throw new EmailAlreadyInUseException(email);
-        }
+    public User registerUser(UserSignUpRequest request){
+        checkIfEmailAlreadyExists(request.getUserEmail());
 
         User newUser = buildUserFromRequest(request);
         return userRepository.save(newUser);
     }
+    public User registerAdmin(AdminSignUpRequest request){
+        checkIfEmailAlreadyExists(request.getUserEmail());
 
-    private User buildUserFromRequest(SignUpRequest request) {
+        Role defaultRole = roleService.require(RoleName.ROLE_ADMIN);
+
+        User admin = User.builder()
+                .userFirstName(request.getUserFirstName())
+                .userEmail(request.getUserEmail())
+                .userPhoneNumber(request.getUserPhoneNumber())
+                .userPassword(passwordEncoder.encode(request.getUserPassword()))
+                .roles(Set.of(defaultRole))
+                .build();
+
+        return userRepository.save(admin);
+    }
+
+
+    private void checkIfEmailAlreadyExists(String email) {
+        if(userRepository.existsByUserEmail(email)){
+            throw new EmailAlreadyInUseException(email);
+        }
+    }
+
+
+    private User buildUserFromRequest(UserSignUpRequest request) {
         Role defaultRole = roleService.require(RoleName.ROLE_USER);
         return  User.builder()
                 .userFirstName(request.getUserFirstName())

@@ -1,9 +1,8 @@
-package com.brenobaise.hometeq_spring.controllers;
+package com.brenobaise.hometeq_spring.controllers.admin;
 
 import com.brenobaise.hometeq_spring.dtos.product.ProductDTO;
 import com.brenobaise.hometeq_spring.dtos.product.ProductInsertDTO;
 import com.brenobaise.hometeq_spring.dtos.product.ProductUpdateDTO;
-import com.brenobaise.hometeq_spring.entities.Product;
 import com.brenobaise.hometeq_spring.mappers.ProductMapper;
 import com.brenobaise.hometeq_spring.services.ProductService;
 import com.brenobaise.hometeq_spring.services.exceptions.DatabaseException;

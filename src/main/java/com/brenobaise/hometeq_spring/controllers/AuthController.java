@@ -1,9 +1,8 @@
 package com.brenobaise.hometeq_spring.controllers;
 
 import com.brenobaise.hometeq_spring.dtos.auth.AuthResponse;
-import com.brenobaise.hometeq_spring.dtos.auth.LoginRequest;
-import com.brenobaise.hometeq_spring.dtos.auth.SignUpRequest;
-import com.brenobaise.hometeq_spring.security.AppUserDetails;
+import com.brenobaise.hometeq_spring.dtos.auth.UserLoginRequest;
+import com.brenobaise.hometeq_spring.dtos.auth.UserSignUpRequest;
 import com.brenobaise.hometeq_spring.security.AuthenticationService;
 import com.brenobaise.hometeq_spring.services.UserService;
 import jakarta.validation.Valid;
@@ -25,7 +24,7 @@ public class AuthController {
     private final UserService userService;
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody @Valid LoginRequest loginRequest){
+    public ResponseEntity<AuthResponse> login(@RequestBody @Valid UserLoginRequest loginRequest){
         UserDetails userDetails = authenticationService.authenticate(
                 loginRequest.getEmail(),
                 loginRequest.getPassword()
@@ -40,7 +39,7 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<AuthResponse> signUp(@RequestBody @Valid SignUpRequest signUpRequest){
+    public ResponseEntity<AuthResponse> signUp(@RequestBody @Valid UserSignUpRequest signUpRequest){
         AuthResponse authResponse = authenticationService.registerAndAuthenticateUser(signUpRequest);
 
         return ResponseEntity.ok(authResponse);

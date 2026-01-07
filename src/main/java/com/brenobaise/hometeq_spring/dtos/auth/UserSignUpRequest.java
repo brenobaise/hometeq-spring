@@ -1,6 +1,5 @@
 package com.brenobaise.hometeq_spring.dtos.auth;
 
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class SignUpRequest {
+public class UserSignUpRequest {
     @NotBlank @Size(max = 100)
     private String userFirstName;
     @Size(max = 255)

@@ -1,7 +1,7 @@
 package com.brenobaise.hometeq_spring.security;
 
 import com.brenobaise.hometeq_spring.dtos.auth.AuthResponse;
-import com.brenobaise.hometeq_spring.dtos.auth.SignUpRequest;
+import com.brenobaise.hometeq_spring.dtos.auth.UserSignUpRequest;
 import org.springframework.security.core.userdetails.UserDetails;
 
 public interface AuthenticationService {
@@ -9,5 +9,5 @@ public interface AuthenticationService {
     String generateToken(UserDetails userDetails);
     UserDetails validateToken(String token);
     Long getJwtExpiryMs();
-    AuthResponse registerAndAuthenticateUser(SignUpRequest request);
+    AuthResponse registerAndAuthenticateUser(UserSignUpRequest request);
 }

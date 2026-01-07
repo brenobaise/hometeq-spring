@@ -1,9 +1,9 @@
-package com.brenobaise.hometeq_spring.controllers;
+package com.brenobaise.hometeq_spring.controllers.admin;
 
 import com.brenobaise.hometeq_spring.dtos.order.OrderAdminDTO;
 import com.brenobaise.hometeq_spring.dtos.order.OrderStatusDTO;
 import com.brenobaise.hometeq_spring.dtos.order.UpdateOrderStatusRequest;
-import com.brenobaise.hometeq_spring.services.AdminOrderService;
+import com.brenobaise.hometeq_spring.services.admin.AdminOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
