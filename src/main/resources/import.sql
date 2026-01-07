@@ -8,13 +8,13 @@
 ------------------------------------------------------------
 -- PRODUCTS (explicit IDs so FK is stable)
 ------------------------------------------------------------
-INSERT INTO tb_products (prod_id, prod_name, prod_pic_name_small, prod_pic_name_large, prod_description_short, prod_description_long, prod_price, prod_quantity)VALUES (1, 'Wireless Mouse', 'mouse_small.jpg', 'mouse_large.jpg', 'Comfortable wireless mouse', 'A 6-button ergonomic wireless mouse with silent clicks.', 19.99, 150);
+INSERT INTO tb_products ( prod_name, prod_pic_name_small, prod_pic_name_large, prod_description_short, prod_description_long, prod_price, prod_quantity)VALUES ( 'Wireless Mouse', 'mouse_small.jpg', 'mouse_large.jpg', 'Comfortable wireless mouse', 'A 6-button ergonomic wireless mouse with silent clicks.', 19.99, 150);
 
-INSERT INTO tb_products (prod_id, prod_name, prod_pic_name_small, prod_pic_name_large, prod_description_short, prod_description_long, prod_price, prod_quantity)VALUES (2, 'Mechanical Keyboard', 'keyboard_small.jpg', 'keyboard_large.jpg', 'RGB Mechanical Keyboard', 'A high-quality mechanical keyboard with customizable RGB lighting.', 89.99, 80);
+INSERT INTO tb_products ( prod_name, prod_pic_name_small, prod_pic_name_large, prod_description_short, prod_description_long, prod_price, prod_quantity)VALUES ( 'Mechanical Keyboard', 'keyboard_small.jpg', 'keyboard_large.jpg', 'RGB Mechanical Keyboard', 'A high-quality mechanical keyboard with customizable RGB lighting.', 89.99, 80);
 
-INSERT INTO tb_products (prod_id, prod_name, prod_pic_name_small, prod_pic_name_large, prod_description_short, prod_description_long, prod_price, prod_quantity)VALUES (3, 'USB-C Charger', 'charger_small.jpg', 'charger_large.jpg', 'Fast USB-C charger', 'A 45W fast-charging USB-C wall adapter.', 24.50, 200);
+INSERT INTO tb_products ( prod_name, prod_pic_name_small, prod_pic_name_large, prod_description_short, prod_description_long, prod_price, prod_quantity)VALUES ( 'USB-C Charger', 'charger_small.jpg', 'charger_large.jpg', 'Fast USB-C charger', 'A 45W fast-charging USB-C wall adapter.', 24.50, 200);
 
-INSERT INTO tb_products (prod_id, prod_name, prod_pic_name_small, prod_pic_name_large, prod_description_short, prod_description_long, prod_price, prod_quantity)VALUES (4, 'Bluetooth Headphones', 'headphones_small.jpg', 'headphones_large.jpg', 'Noise-cancelling headphones', 'Wireless headphones with ANC and 20-hour battery life.', 59.95, 60);
+INSERT INTO tb_products ( prod_name, prod_pic_name_small, prod_pic_name_large, prod_description_short, prod_description_long, prod_price, prod_quantity)VALUES ('Bluetooth Headphones', 'headphones_small.jpg', 'headphones_large.jpg', 'Noise-cancelling headphones', 'Wireless headphones with ANC and 20-hour battery life.', 59.95, 60);
 
 ------------------------------------------------------------
 -- ORDERS (explicit IDs so FK is stable)

@@ -35,6 +35,15 @@ public class User {
     @Builder.Default
     private Set<Order> orders  = new HashSet<>();
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "tb_user_role",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    @Builder.Default
+    private Set<Role> roles = new HashSet<>();
+
     public void addOrder(Order order) {
         orders.add(order);
         order.setUser(this);

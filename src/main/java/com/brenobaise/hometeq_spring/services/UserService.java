@@ -1,6 +1,8 @@
 package com.brenobaise.hometeq_spring.services;
 
 import com.brenobaise.hometeq_spring.dtos.auth.SignUpRequest;
+import com.brenobaise.hometeq_spring.entities.Role;
+import com.brenobaise.hometeq_spring.entities.RoleName;
 import com.brenobaise.hometeq_spring.entities.User;
 import com.brenobaise.hometeq_spring.repositories.UserRepository;
 import com.brenobaise.hometeq_spring.security.AppUserDetails;
@@ -12,10 +14,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Set;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
+    private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
 
@@ -42,6 +47,7 @@ public class UserService {
     }
 
     private User buildUserFromRequest(SignUpRequest request) {
+        Role defaultRole = roleService.require(RoleName.ROLE_USER);
         return  User.builder()
                 .userFirstName(request.getUserFirstName())
                 .userSecondName(request.getUserSecondName())
@@ -49,6 +55,7 @@ public class UserService {
                 .userPostCode(request.getUserPostCode())
                 .userPhoneNumber(request.getUserPhoneNumber())
                 .userEmail(request.getUserEmail())
+                .roles(Set.of(defaultRole))
                 .userPassword(passwordEncoder.encode(request.getUserPassword()))
                 .build();
     }
