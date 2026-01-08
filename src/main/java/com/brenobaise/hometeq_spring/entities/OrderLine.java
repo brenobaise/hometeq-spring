@@ -1,6 +1,7 @@
 package com.brenobaise.hometeq_spring.entities;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -16,6 +17,8 @@ public class OrderLine {
     private Long orderLineId;
     private Long quantityOrdered;
     private BigDecimal subTotal;
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal unitPrice;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "orderNo")
@@ -25,10 +28,11 @@ public class OrderLine {
     @JoinColumn(name = "prodId")
     private Product product;
 
-    public OrderLine(Order order, Product product, Long quantityOrdered, BigDecimal subTotal) {
+    public OrderLine(Order order, Product product, Long quantityOrdered, BigDecimal unitPrice, BigDecimal subTotal) {
         this.order = order;
         this.product = product;
         this.quantityOrdered = quantityOrdered;
+        this.unitPrice = unitPrice;
         this.subTotal = subTotal;
     }
 }

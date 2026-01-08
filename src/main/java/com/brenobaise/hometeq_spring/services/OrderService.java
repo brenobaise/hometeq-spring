@@ -1,162 +1,121 @@
 package com.brenobaise.hometeq_spring.services;
 
 import com.brenobaise.hometeq_spring.dtos.order.OrderDTO;
-import com.brenobaise.hometeq_spring.dtos.order.OrderInsertDTO;
 import com.brenobaise.hometeq_spring.dtos.order.ProductOrderItem;
 import com.brenobaise.hometeq_spring.entities.Order;
+import com.brenobaise.hometeq_spring.entities.OrderStatus;
 import com.brenobaise.hometeq_spring.entities.Product;
 import com.brenobaise.hometeq_spring.entities.User;
 import com.brenobaise.hometeq_spring.mappers.OrderMapper;
 import com.brenobaise.hometeq_spring.repositories.OrderRepository;
 import com.brenobaise.hometeq_spring.repositories.ProductRepository;
+import com.brenobaise.hometeq_spring.services.exceptions.EmptyCartException;
 import com.brenobaise.hometeq_spring.services.exceptions.OrderDoesNotExist;
 import com.brenobaise.hometeq_spring.services.exceptions.ResourceNotFoundException;
 import com.brenobaise.hometeq_spring.services.exceptions.products.InsufficientStockException;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class OrderService {
-
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
     private final OrderMapper orderMapper;
     private final UserService userService;
 
-
-    /**
-     * Fire is the process of creating a new order, assigning the user to it, and adding all desired products to that order.
-     * @param username The user email assigned to this new order
-     * @param order The dto containing all the product ids
-     * @return {@code Order}
-     */
-    @Transactional()
-    public OrderDTO fire(String username, @Valid OrderInsertDTO order) {
-        User user = userService.findByEmail(username);
-
-        Order newOrder = createOrder(user);
-
-
-        // fetches products from the database based on the items in the cart given by the DTO
-        Map<Long, Product> mappedProducts = loadProducts(order);
-
-        BigDecimal orderTotal  = addProductsToOrder(order.getItemsInCart(), mappedProducts, newOrder);
-
-        newOrder.setOrderTotal(orderTotal);
-
-
-        newOrder = orderRepository.save(newOrder);
-        return  orderMapper.toDTO(newOrder);
-
-    }
-
-    /**
-     * Adds products to the order based on the ids in the cart.
-     *
-     * @param itemsInCart list of items with product IDs and quantities
-     * @param products    map of productId -> Product, pre-fetched from DB
-     * @param newOrder    order being populated
-     * @return updated order total
-     */
-    private BigDecimal addProductsToOrder(List<ProductOrderItem> itemsInCart, Map<Long, Product> products,
-                                          Order newOrder) {
-        BigDecimal orderTotal = BigDecimal.ZERO;
-
-        // Adds a Product to the Order based on the map of  products
-        for(ProductOrderItem item: itemsInCart){
-            // get the product to be added to the order  from the map
-            Product product = products.get(item.getProdId());
-
-            if(product == null){
-                throw new ResourceNotFoundException(item.getProdId() );
-            }
-
-            int updated = productRepository.decrementStockIfAvailable(
-                    item.getProdId(),
-                    item.getProdQuantity()
-            );
-
-            if(updated == 0){
-                throw new InsufficientStockException(item.getProdId(), item.getProdQuantity());
-            }
-            // add the product to the order
-            newOrder.addProduct(product, item.getProdQuantity());
-            orderTotal = orderTotal.add(calculateLineTotal(product.getProdPrice(), item.getProdQuantity()));
-
-
-        }
-        return orderTotal;
-    }
-
-    /**
-     * Prepares a map of products from the Order dto.
-     * @param order The dto containing all the product ids
-     * @return {@code Map<Long,Product>} a map with the product id and the corresponding product.
-     */
-    private Map<Long, Product> loadProducts(OrderInsertDTO order) {
-
-        // creates a list of product ids based from what's in the order
-        List<Long> listOfProductIds = order.getItemsInCart()
-                .stream()
-                .map(ProductOrderItem::getProdId)
-                .toList();
-
-        // retrieves the products using the ids.
-        List<Product> fetchedProducts = fetchProducts(listOfProductIds);
-
-        // Hash map is for the index look up to become  O(1)
-        // rather than iterating over a list with a loop O(n)
-        return fetchedProducts.stream()
-                .collect(Collectors.toMap(Product::getProdId, product -> product));
-    }
-
-    /**
-     * Creates a new Order Object
-     * @param user The user assigned to this new order
-     * @return {@code Order}
-     */
-    private static Order createOrder(User user) {
-        return new Order(user, LocalDateTime.now(), "PENDING", LocalDate.now().plusDays(3) );
-    }
-
-    /**
-     * Fetches all products from the database, based on a list of ids.
-     * @param listOfProductIds a list of ids
-     * @return {@code List<Product>}
-     */
-    private List<Product> fetchProducts(List<Long> listOfProductIds) {
-        return productRepository.findAllByProdIds(listOfProductIds);
-    }
-
-
-    /**
-     * Helper function to calculate the total price of all products and it's quantities.
-     * @param unitPrice the value of each item
-     * @param prodQuantity the number of times that item has been selected
-     */
-    private BigDecimal calculateLineTotal(BigDecimal unitPrice, Long prodQuantity){
-        return  unitPrice.multiply(BigDecimal.valueOf(prodQuantity));
-    }
-
-    public Order findById(Long orderNo){
-        return orderRepository.findById(orderNo)
-                .orElseThrow(() -> new OrderDoesNotExist(orderNo));
-    }
-
     public List<Order> getAllOrders(Long userId){
         return orderRepository.findOrdersWithLinesByUserId(userId);
+    }
+
+    @Transactional
+    public OrderDTO getOrCreateDraft(String username){
+        User user = userService.findByEmail(username);
+
+        Order draft = orderRepository.findUserOrderByStatusWithDetails(user.getUserId(), OrderStatus.DRAFT)
+                .orElseGet(() -> orderRepository.save(
+                        new Order(user, LocalDateTime.now(), OrderStatus.DRAFT, null)
+                ));
+        draft.recalcTotal();
+        return orderMapper.toDTO(draft);
+    }
+
+    @Transactional()
+    public OrderDTO addItemToDraft(String username, ProductOrderItem item){
+        User user = userService.findByEmail(username);
+
+        // find a draft or create a new one
+        Order draft = orderRepository
+                .findUserOrderByStatusWithDetails(user.getUserId(), OrderStatus.DRAFT)
+                .orElseGet(() -> orderRepository.save(
+                        new Order(user,LocalDateTime.now(), OrderStatus.DRAFT,null)
+                ));
+
+        // get the product to from the database
+        Product product = productRepository.findById(item.getProdId())
+                .orElseThrow(() -> new ResourceNotFoundException(item.getProdId()));
+
+        // checks stock
+        if(product.getProdQuantity() != null && product.getProdQuantity() < item.getProdQuantity()){
+            throw new InsufficientStockException(item.getProdId(), item.getProdQuantity());
+        }
+
+
+        draft.addOrIncrementProduct(product, item.getProdQuantity());
+        draft.recalcTotal();
+        return  orderMapper.toDTO(orderRepository.save(draft));
+    }
+
+    @Transactional
+    public OrderDTO removeItemFromDraft(String username, Long prodId){
+        User user = userService.findByEmail(username);
+
+        Order draft = orderRepository
+                .findUserOrderByStatusWithDetails(user.getUserId(), OrderStatus.DRAFT)
+                .orElseThrow(EmptyCartException::new);
+
+        draft.removeProduct(prodId);
+        draft.recalcTotal();
+
+        return  orderMapper.toDTO(orderRepository.save(draft));
+    }
+
+    @Transactional
+    public OrderDTO checkoutDraft(String username){
+        User user = userService.findByEmail(username);
+
+        Order draft = orderRepository
+                .findUserOrderByStatusWithDetails(user.getUserId(), OrderStatus.DRAFT)
+                .orElseThrow(() -> new RuntimeException("No draft order"));
+
+        if(draft.getOrderLineList().isEmpty()){
+            throw new EmptyCartException();
+        }
+
+        // reduces stock per item in cart
+        for(var line: draft.getOrderLineList()){
+            Long prodID = line.getProduct().getProdId();
+            long qty = line.getQuantityOrdered();
+
+            int updated = productRepository.decrementStockIfAvailable(prodID,qty);
+
+            if(updated == 0){
+                throw new InsufficientStockException(prodID, qty);
+            }
+        }
+
+        draft.setOrderStatus(OrderStatus.PENDING);
+        draft.setOrderDate(LocalDateTime.now());
+        draft.setShippingDate(LocalDate.now().plusDays(3));
+        draft.recalcTotal();
+        return orderMapper.toDTO(orderRepository.save(draft));
+
     }
 }

@@ -6,6 +6,7 @@ import com.brenobaise.hometeq_spring.services.exceptions.DatabaseException;
 import com.brenobaise.hometeq_spring.services.exceptions.ProductAlreadyExistsException;
 import com.brenobaise.hometeq_spring.services.exceptions.ResourceNotFoundException;
 import com.brenobaise.hometeq_spring.services.exceptions.auth.EmailAlreadyInUseException;
+import com.brenobaise.hometeq_spring.services.exceptions.products.InsufficientStockException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
@@ -160,5 +161,18 @@ public class ControllerExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(Map.of("error", ex.getMessage()));
+    }
+
+    @ExceptionHandler(InsufficientStockException.class)
+
+    public ResponseEntity<CustomError> handleInsufficientStockException(InsufficientStockException ex, HttpServletRequest request){
+        CustomError err = CustomError.builder()
+                .timestamp(Instant.now())
+                .status(HttpStatus.CONFLICT.value())
+                .message("Not enough stock for the chosen product")
+                .error(ex.getMessage())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(err);
     }
 }

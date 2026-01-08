@@ -38,7 +38,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.GET, "/products/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/**").permitAll()
-                        // ✅ allow invite-code admin creation without being logged in
+                        // allow invite-code admin creation without being logged in
                         .requestMatchers(HttpMethod.POST, "/admin/signup").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
 

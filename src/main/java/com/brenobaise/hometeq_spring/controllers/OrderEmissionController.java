@@ -24,15 +24,4 @@ public class OrderEmissionController {
     @Autowired
     private UserService userService;
 
-    @PostMapping()
-    public ResponseEntity<OrderDTO> fireOrder(@AuthenticationPrincipal AppUserDetails user,
-                                              @Valid @RequestBody OrderInsertDTO order){
-
-        OrderDTO newOrder = orderService.fire(user.getUsername(), order);
-
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(newOrder.getOrderNo())
-                .toUri();
-        return ResponseEntity.created(uri).body(newOrder);
-    }
 }

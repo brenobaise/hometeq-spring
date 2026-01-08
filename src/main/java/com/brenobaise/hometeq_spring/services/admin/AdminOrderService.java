@@ -3,6 +3,7 @@ package com.brenobaise.hometeq_spring.services.admin;
 import com.brenobaise.hometeq_spring.dtos.order.OrderAdminDTO;
 import com.brenobaise.hometeq_spring.dtos.order.OrderStatusDTO;
 import com.brenobaise.hometeq_spring.entities.Order;
+import com.brenobaise.hometeq_spring.entities.OrderStatus;
 import com.brenobaise.hometeq_spring.mappers.OrderMapper;
 import com.brenobaise.hometeq_spring.repositories.OrderRepository;
 import com.brenobaise.hometeq_spring.services.OrderService;
@@ -55,12 +56,12 @@ public class AdminOrderService {
     }
 
     @Transactional(readOnly = true)
-    public Page<OrderStatusDTO> getOrdersByStatus(String status, Pageable pageable ){
+    public Page<OrderStatusDTO> getOrdersByStatus(OrderStatus status, Pageable pageable ){
         return orderRepository.findByOrderStatusIgnoreCase(status,pageable);
     }
 
     @Transactional
-    public void updateOrderStatus(Long orderId, String newStatus){
+    public void updateOrderStatus(Long orderId, OrderStatus newStatus){
         /**
          * Currently order status is being hardcoded.
          * Whatever text comes into the newStatus, is persisted to the database.

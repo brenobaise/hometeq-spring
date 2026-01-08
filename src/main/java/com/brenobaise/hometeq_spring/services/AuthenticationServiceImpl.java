@@ -12,6 +12,7 @@ import io.jsonwebtoken.security.Keys;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -33,7 +34,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Value("${jwt.secret}")
     private  String secretKey;
     @Getter
-    public final Long jwtExpiryMs = 60000L;
+
+    @Value("${jwt.expiry}")
+    public  Long jwtExpiryMs;
 
     @Override
     public UserDetails authenticate(String email, String password) {

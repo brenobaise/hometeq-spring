@@ -3,6 +3,7 @@ package com.brenobaise.hometeq_spring.controllers.admin;
 import com.brenobaise.hometeq_spring.dtos.order.OrderAdminDTO;
 import com.brenobaise.hometeq_spring.dtos.order.OrderStatusDTO;
 import com.brenobaise.hometeq_spring.dtos.order.UpdateOrderStatusRequest;
+import com.brenobaise.hometeq_spring.entities.OrderStatus;
 import com.brenobaise.hometeq_spring.services.admin.AdminOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -41,12 +42,13 @@ public class AdminOrderController {
     public ResponseEntity<Page<OrderStatusDTO>> getOrdersByStatus(
             // missing to fix null attributes inside projection dto
             @PathVariable String status, Pageable pageable){
-        return ResponseEntity.ok(adminOrderService.getOrdersByStatus(status.toLowerCase(), pageable));
+        OrderStatus orderStatus = OrderStatus.valueOf(status);
+        return ResponseEntity.ok(adminOrderService.getOrdersByStatus(orderStatus, pageable));
     }
 
     @PatchMapping("{orderNo}/status")
     public ResponseEntity<Void> updateOrderStatus(@PathVariable Long orderNo, @RequestBody UpdateOrderStatusRequest request){
-        adminOrderService.updateOrderStatus(orderNo, request.getStatus());
+        adminOrderService.updateOrderStatus(orderNo, request.getOrderStatus());
         return  ResponseEntity.noContent().build();
 
     }
