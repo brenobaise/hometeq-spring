@@ -1,6 +1,7 @@
 package com.brenobaise.hometeq_spring.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -31,7 +32,7 @@ public class Product {
     private String prodDescriptionLong;
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal prodPrice;
-    @Column(nullable = true)
+    @Column(nullable = false)
     private Long prodQuantity;
 
     @OneToMany(mappedBy = "product")

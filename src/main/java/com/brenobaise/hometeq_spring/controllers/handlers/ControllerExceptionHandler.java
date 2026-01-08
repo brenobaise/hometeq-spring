@@ -7,16 +7,19 @@ import com.brenobaise.hometeq_spring.services.exceptions.ProductAlreadyExistsExc
 import com.brenobaise.hometeq_spring.services.exceptions.ResourceNotFoundException;
 import com.brenobaise.hometeq_spring.services.exceptions.auth.EmailAlreadyInUseException;
 import jakarta.servlet.http.HttpServletRequest;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.Instant;
+import java.util.Map;
 
 @RestControllerAdvice
 public class ControllerExceptionHandler {
@@ -143,5 +146,19 @@ public class ControllerExceptionHandler {
                 .path(request.getRequestURI())
                 .build();
         return ResponseEntity.status(HttpStatus.CONFLICT).body(err);
+    }
+
+    @ExceptionHandler(InsufficientAuthenticationException.class)
+    public ResponseEntity<?> handleInsufficientAuthenticationException (InsufficientAuthenticationException ex, HttpServletRequest request ){
+        CustomError err = CustomError.builder()
+                .timestamp(Instant.now())
+                .status(HttpStatus.CONFLICT.value())
+                .message("Insufficient stock")
+                .error(ex.getMessage())
+                .path(request.getRequestURI())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(Map.of("error", ex.getMessage()));
     }
 }

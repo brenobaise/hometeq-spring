@@ -8,7 +8,7 @@
 ------------------------------------------------------------
 -- PRODUCTS (explicit IDs so FK is stable)
 ------------------------------------------------------------
-INSERT INTO tb_products ( prod_name, prod_pic_name_small, prod_pic_name_large, prod_description_short, prod_description_long, prod_price, prod_quantity)VALUES ( 'Wireless Mouse', 'mouse_small.jpg', 'mouse_large.jpg', 'Comfortable wireless mouse', 'A 6-button ergonomic wireless mouse with silent clicks.', 19.99, 150);
+INSERT INTO tb_products ( prod_name, prod_pic_name_small, prod_pic_name_large, prod_description_short, prod_description_long, prod_price, prod_quantity)VALUES ( 'Wireless Mouse', 'mouse_small.jpg', 'mouse_large.jpg', 'Comfortable wireless mouse', 'A 6-button ergonomic wireless mouse with silent clicks.', 19.99, 1);
 
 INSERT INTO tb_products ( prod_name, prod_pic_name_small, prod_pic_name_large, prod_description_short, prod_description_long, prod_price, prod_quantity)VALUES ( 'Mechanical Keyboard', 'keyboard_small.jpg', 'keyboard_large.jpg', 'RGB Mechanical Keyboard', 'A high-quality mechanical keyboard with customizable RGB lighting.', 89.99, 80);
 

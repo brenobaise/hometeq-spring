@@ -11,6 +11,7 @@ import com.brenobaise.hometeq_spring.repositories.OrderRepository;
 import com.brenobaise.hometeq_spring.repositories.ProductRepository;
 import com.brenobaise.hometeq_spring.services.exceptions.OrderDoesNotExist;
 import com.brenobaise.hometeq_spring.services.exceptions.ResourceNotFoundException;
+import com.brenobaise.hometeq_spring.services.exceptions.products.InsufficientStockException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -83,6 +84,14 @@ public class OrderService {
                 throw new ResourceNotFoundException(item.getProdId() );
             }
 
+            int updated = productRepository.decrementStockIfAvailable(
+                    item.getProdId(),
+                    item.getProdQuantity()
+            );
+
+            if(updated == 0){
+                throw new InsufficientStockException(item.getProdId(), item.getProdQuantity());
+            }
             // add the product to the order
             newOrder.addProduct(product, item.getProdQuantity());
             orderTotal = orderTotal.add(calculateLineTotal(product.getProdPrice(), item.getProdQuantity()));
